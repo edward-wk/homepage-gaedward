@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caja registradora — práctica de cambio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+  <div class="app">
+    <header>
+      <h1>Caja registradora</h1>
+      <p class="subtitle">Practica devolver el cambio en euros</p>
+    </header>
+
+    <section class="stats-bar" aria-label="Estadísticas">
+      <div class="stat">
+        <span class="stat-value" id="stat-correct">0</span>
+        <span class="stat-label">aciertos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-streak">0</span>
+        <span class="stat-label">racha</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-time">—</span>
+        <span class="stat-label">último (s)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-avg">—</span>
+        <span class="stat-label">media (s)</span>
+      </div>
+    </section>
+
+    <section class="transaction" aria-live="polite">
+      <form class="ticket" id="transaction-form">
+        <div class="ticket-row ticket-input">
+          <label for="purchase-input">Compra</label>
+          <div class="amount-field">
+            <input
+              type="text"
+              id="purchase-input"
+              inputmode="decimal"
+              autocomplete="off"
+              placeholder="0,00"
+              required
+            />
+            <span class="amount-suffix">€</span>
+          </div>
+        </div>
+        <div class="ticket-row ticket-input customer-pay">
+          <label for="customer-input">Cliente paga</label>
+          <div class="amount-field">
+            <input
+              type="text"
+              id="customer-input"
+              inputmode="decimal"
+              autocomplete="off"
+              placeholder="0,00"
+              required
+            />
+            <span class="amount-suffix">€</span>
+          </div>
+        </div>
+        <div class="ticket-row change-due highlight" id="change-due-row">
+          <span>Cambio a devolver</span>
+          <strong id="change-due" class="hidden-value" aria-hidden="true">—</strong>
+        </div>
+        <div class="ticket-actions">
+          <button type="submit" class="btn primary" id="btn-apply">Empezar</button>
+          <button type="button" class="btn secondary" id="btn-random" title="Rellenar con un ejemplo">
+            Ejemplo
+          </button>
+        </div>
+        <p class="ticket-hint" id="ticket-hint">Introduce compra y pago; luego saca el cambio.</p>
+      </form>
+    </section>
+
+    <section class="your-change" id="coins-section" aria-label="De la caja">
+      <div class="change-header">
+        <h2>De la caja</h2>
+        <div class="change-amounts">
+          <span class="entregado-line">
+            Entregado: <strong id="given-total">0,00 €</strong>
+          </span>
+          <span class="entregado-formula" id="entregado-formula">compra + cambio que sacas</span>
+          <span class="remaining" id="remaining-label">Saca el cambio con los botones.</span>
+        </div>
+      </div>
+      <p class="cambio-sacado-label">Cambio sacado:</p>
+      <ul id="given-breakdown" class="breakdown-list given-list"></ul>
+    </section>
+
+    <section class="denominations" id="denominations-section" aria-label="Monedas y billetes">
+      <h3 class="section-label">Monedas</h3>
+      <div class="btn-grid coins" id="coin-buttons"></div>
+      <h3 class="section-label">Billetes</h3>
+      <div class="btn-grid notes" id="note-buttons"></div>
+    </section>
+
+    <section class="actions">
+      <button type="button" class="btn secondary" id="btn-undo" title="Quitar última moneda/billete">Deshacer</button>
+      <button type="button" class="btn secondary" id="btn-clear">Limpiar cambio</button>
+      <button type="button" class="btn primary" id="btn-check">Comprobar</button>
+      <button type="button" class="btn accent" id="btn-new">Reiniciar cambio</button>
+    </section>
+
+    <div class="feedback" id="feedback" role="status" hidden></div>
+
+    <details class="help">
+      <summary>Cómo practicar</summary>
+      <ol>
+        <li>Escribe la <strong>compra</strong> y lo que <strong>paga el cliente</strong>, y pulsa <strong>Empezar</strong>.</li>
+        <li>Empiezas en el importe de la <strong>compra</strong>; cada botón suma el cambio que sacas.</li>
+        <li>Cuando <strong>Entregado</strong> iguale lo que pagó el cliente, el cambio es correcto.</li>
+        <li>Pulsa <strong>Comprobar</strong> (o Enter) para ver el resultado y el cambio que debías devolver.</li>
+        <li><strong>Ejemplo</strong> rellena cantidades al azar; <strong>Reiniciar cambio</strong> limpia la bandeja.</li>
+      </ol>
+      <label class="option">
+        <input type="checkbox" id="opt-hint" />
+        Mostrar pista del cambio óptimo al fallar
+      </label>
+      <label class="option">
+        <input type="checkbox" id="opt-sound" checked />
+        Sonido al acertar
+      </label>
+    </details>
+  </div>
+
+  <aside class="cash-visual-panel" aria-label="Bandeja de cambio">
+    <h2 class="visual-title">Bandeja de caja</h2>
+    <p class="visual-subtitle">Lo que vas sacando</p>
+    <div class="cash-tray" id="cash-tray">
+      <p class="cash-visual-empty" id="cash-visual-empty">
+        Pulsa monedas o billetes para ir llenando la bandeja
+      </p>
+      <div class="cash-visual-stack" id="cash-visual-stack"></div>
+    </div>
+    <div class="visual-total">
+      <span class="visual-total-label">Solo cambio</span>
+      <strong class="visual-total-value" id="visual-change-total">0,00 €</strong>
+    </div>
+  </aside>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
